@@ -5,7 +5,9 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import ug.ac.vu.g09.core.Record;
 
-/** One attendance record: either a sign-in (with time) or an absence (with reason). */
+/** One attendance record: either a sign-in (with time) or an absence (with reason).
+ * @author Douth Nhial
+ */
 public class AttendanceEntry extends Record {
 
     public static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy");

@@ -9,7 +9,9 @@ import ug.ac.vu.g09.core.Record;
 import ug.ac.vu.g09.staff.Staff.Role;
 import ug.ac.vu.g09.staff.Staff.Shift;
 
-/** CRUD, attendance, shift rules, reports and file storage for the Staff module. */
+/** CRUD, attendance, shift rules, reports and file storage for the Staff module.
+ * @author Douth Nhial
+ */
 public class StaffService {
 
     private final ArrayList<Staff> staffList = new ArrayList<>();

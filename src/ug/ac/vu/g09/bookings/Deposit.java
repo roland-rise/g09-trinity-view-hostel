@@ -4,6 +4,9 @@ import ug.ac.vu.g09.core.Record;
 import ug.ac.vu.g09.core.Payable;
 import ug.ac.vu.g09.tenants.Tenant;
 
+/**
+ * @author Nayiga Patricia
+ */
 public class Deposit extends Record implements Payable {
     private Tenant tenant;
     private final double AMOUNT = 40000.0; // Fixed refundable deposit

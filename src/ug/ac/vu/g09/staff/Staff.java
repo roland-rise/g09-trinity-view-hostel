@@ -2,7 +2,9 @@ package ug.ac.vu.g09.staff;
 
 import ug.ac.vu.g09.core.Record;
 
-/** A staff member: full name, role and (for security) a shift. No salary data is stored. */
+/** A staff member: full name, role and (for security) a shift. No salary data is stored.
+ * @author Douth Nhial
+ */
 public class Staff extends Record {
 
     public enum Role {

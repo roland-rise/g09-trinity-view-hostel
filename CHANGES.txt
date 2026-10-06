@@ -1,0 +1,63 @@
+G09 merge build 6. Every change made to a teammate's file is listed here.
+
+DROPPED (already in the shared core, or replaced by the real class)
+  Grace:     core/Record.java, core/InputHelper.java, rooms/Room.java (her stub), TenantModuleDemo.java, README.txt
+  Abdul:     core/Record.java, core/InputHelper.java, tenants/Tenant.java (his stub), RoomModuleDemo.java, README.txt
+  Douth:     core/Record.java, core/InputHelper.java (his stubs), README.md
+  Herbert:   the whole stubs folder (Record, Payable, InputHelper, Tenant, TenantService, Room, RoomService,
+             MaintenanceLauncher) and README.txt
+  Patricia:  nothing to drop. uml.docx is her UML figure and goes to the report team.
+
+SHARED CORE (Mande)
+  Record.java       added  public abstract String toFileLine();
+  InputHelper.java  added  readYesNo(prompt) and readOptional(prompt)
+
+PAYMENTS (Mande)         calls findTenantById, getAllTenants, findRoomByNumber
+GRACE, TenantMenu        constructor TenantMenu(TenantService, RoomService, InputHelper), show() renamed run(),
+                         shared InputHelper object, room looked up in RoomService
+ABDUL, RoomMenu          constructor RoomMenu(RoomService, TenantService, InputHelper),
+                         shared InputHelper object, real Tenant looked up by ID
+DOUTH                    Staff keeps its name in Record's name field, describe() returns a String,
+                         StaffMenu(StaffService, InputHelper). His 32 tests pass.
+
+HERBERT, Maintenance (5 classes kept)
+  MaintenanceService   findTenant became findTenantById (1 line)
+  MaintenanceMenu      findTenant became findTenantById, constructor is now
+                       MaintenanceMenu(MaintenanceService, TenantService, RoomService, InputHelper),
+                       uses the shared InputHelper object, the date prompt now says (yyyy-mm-dd)
+  MaintenanceTest      builds the real Tenant and Room, and clears the service files before each test
+  Result: 33 passed, 0 failed on the real classes. Tested through the main menu: stages in order, skipping a
+  stage refused, a fundi before inspection refused, requests and fundis survive a restart.
+
+PATRICIA, Bookings (5 classes)
+  bookingservice.java  renamed BookingService.java. A public class must have the same file name,
+                       otherwise the code does not compile.
+  BookingMenu          constructor is now BookingMenu(BookingService, InputHelper), uses the shared InputHelper object
+  Line endings changed from Windows to normal.
+
+JOSEMARIA, Visitors (5 classes kept)
+  VisitorService   findTenant became findTenantById (1 line). The service loads its own files when it is created.
+  VisitorMenu      findTenant became findTenantById, constructor is now VisitorMenu(VisitorService, TenantService, InputHelper),
+                   uses the shared InputHelper object, the overnight prompt uses readOptional so Enter means no.
+  Tested through the main menu: a visit inside hours is signed in, outside hours is refused, outside hours with the
+  manager's approval is accepted, a banned visitor is refused, a bad time and an unknown tenant are refused, the
+  reports and the polymorphic list work, and visits survive a restart. A damaged first line is skipped and the
+  other lines are kept. She sent no automated tests.
+
+CHANGE REQUEST BUILT (Mande, Payments): record the mobile money transaction ID
+  Rule: an MTN or Airtel payment must carry a transaction ID of 6 to 20 letters or digits. Cash and bank payments have none.
+  Payment.java         new field transactionId, setTransactionId(), isValidTransactionId(), isMobileMoney(), shown in describe(),
+                       written as an 11th part of toFileLine()
+  LateFeePayment.java  toFileLine() writes the 11th part too
+  PaymentService.java  addPayment() refuses a mobile money payment with no ID, parseLine() reads old 10-part and new 11-part lines
+  PaymentMenu.java     asks for the ID after MTN or Airtel is chosen and asks again until it is valid
+  Other modules: no change. Compiles and all earlier behaviour is unchanged. Tested: bad ID refused then good ID saved,
+  cash needs no ID, ID shown in the list and saved in the file, an old line without an ID still loads.
+
+@AUTHOR TAGS ADDED (Mande): the brief wants an @author tag with the owner's name on every class.
+  Added to the 5 Bookings classes (Nayiga Patricia) and the 5 Staff classes (Douth Nhial). No other change in those files.
+
+MAINMENU (Mande)
+  options 1 to 7 start the real menus. Maintenance and Bookings are loaded at start-up:
+  Herbert's service does not load itself, so MainMenu calls loadFromFile() for it.
+

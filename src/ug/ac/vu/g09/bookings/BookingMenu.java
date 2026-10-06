@@ -1,5 +1,8 @@
 package ug.ac.vu.g09.bookings;
 import ug.ac.vu.g09.core.InputHelper;
+/**
+ * @author Nayiga Patricia
+ */
 public class BookingMenu {
     private BookingService service;
     private InputHelper input;

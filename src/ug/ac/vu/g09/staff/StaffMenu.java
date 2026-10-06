@@ -6,7 +6,9 @@ import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 import ug.ac.vu.g09.core.InputHelper;
 
-/** Console submenu for the Staff and Shifts module. Called from MainMenu. */
+/** Console submenu for the Staff and Shifts module. Called from MainMenu.
+ * @author Douth Nhial
+ */
 public class StaffMenu {
 
     private final StaffService service;

@@ -4,6 +4,9 @@ import ug.ac.vu.g09.core.Payable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.io.*;
+/**
+ * @author Nayiga Patricia
+ */
 public class BookingService {
     private ArrayList<Booking> bookings = new ArrayList<>();
     private ArrayList<Deposit> deposits = new ArrayList<>();

@@ -4,6 +4,9 @@ import ug.ac.vu.g09.core.Record;
 import ug.ac.vu.g09.core.Payable;
 import ug.ac.vu.g09.rooms.Room;
 import java.time.LocalDate;
+/**
+ * @author Nayiga Patricia
+ */
 public class Booking extends Record implements Payable {
     private String phone;
     private Room room;
