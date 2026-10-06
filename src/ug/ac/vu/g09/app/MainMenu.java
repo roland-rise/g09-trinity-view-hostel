@@ -4,6 +4,10 @@ import ug.ac.vu.g09.core.InputHelper;
 import ug.ac.vu.g09.payments.PaymentMenu;
 import ug.ac.vu.g09.payments.PaymentService;
 import java.io.File;
+import ug.ac.vu.g09.bookings.BookingMenu;
+import ug.ac.vu.g09.bookings.BookingService;
+import ug.ac.vu.g09.maintenance.MaintenanceMenu;
+import ug.ac.vu.g09.maintenance.MaintenanceService;
 import ug.ac.vu.g09.rooms.RoomMenu;
 import ug.ac.vu.g09.rooms.RoomService;
 import ug.ac.vu.g09.staff.StaffMenu;
@@ -21,6 +25,8 @@ public class MainMenu {
     private RoomMenu roomMenu;
     private PaymentMenu paymentMenu;
     private StaffMenu staffMenu;
+    private BookingMenu bookingMenu;
+    private MaintenanceMenu maintenanceMenu;
 
     public MainMenu() {
         new File("data").mkdirs();
@@ -32,6 +38,13 @@ public class MainMenu {
         tenantMenu = new TenantMenu(tenants, rooms, input);
         roomMenu = new RoomMenu(rooms, tenants, input);
         staffMenu = new StaffMenu(new StaffService("data/staff.txt", "data/attendance.txt"), input);
+        BookingService bookings = new BookingService();
+        bookings.loadFromFile();
+        bookingMenu = new BookingMenu(bookings, input);
+        // the maintenance service does not load itself, so it is loaded here
+        MaintenanceService maintenance = new MaintenanceService(tenants, rooms);
+        maintenance.loadFromFile();
+        maintenanceMenu = new MaintenanceMenu(maintenance, tenants, rooms, input);
         paymentMenu = new PaymentMenu(payments, tenants, rooms, input);
     }
 
@@ -58,6 +71,12 @@ public class MainMenu {
                     break;
                 case 3:
                     paymentMenu.run();
+                    break;
+                case 4:
+                    bookingMenu.run();
+                    break;
+                case 5:
+                    maintenanceMenu.run();
                     break;
                 case 7:
                     staffMenu.run();
