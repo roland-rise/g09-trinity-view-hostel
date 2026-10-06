@@ -9,6 +9,8 @@ import ug.ac.vu.g09.bookings.BookingService;
 import ug.ac.vu.g09.maintenance.MaintenanceMenu;
 import ug.ac.vu.g09.maintenance.MaintenanceService;
 import ug.ac.vu.g09.rooms.RoomMenu;
+import ug.ac.vu.g09.visitors.VisitorMenu;
+import ug.ac.vu.g09.visitors.VisitorService;
 import ug.ac.vu.g09.rooms.RoomService;
 import ug.ac.vu.g09.staff.StaffMenu;
 import ug.ac.vu.g09.staff.StaffService;
@@ -27,6 +29,7 @@ public class MainMenu {
     private StaffMenu staffMenu;
     private BookingMenu bookingMenu;
     private MaintenanceMenu maintenanceMenu;
+    private VisitorMenu visitorMenu;
 
     public MainMenu() {
         new File("data").mkdirs();
@@ -45,6 +48,7 @@ public class MainMenu {
         MaintenanceService maintenance = new MaintenanceService(tenants, rooms);
         maintenance.loadFromFile();
         maintenanceMenu = new MaintenanceMenu(maintenance, tenants, rooms, input);
+        visitorMenu = new VisitorMenu(new VisitorService(tenants, "data/visits.txt", "data/banned.txt"), tenants, input);
         paymentMenu = new PaymentMenu(payments, tenants, rooms, input);
     }
 
@@ -77,6 +81,9 @@ public class MainMenu {
                     break;
                 case 5:
                     maintenanceMenu.run();
+                    break;
+                case 6:
+                    visitorMenu.run();
                     break;
                 case 7:
                     staffMenu.run();

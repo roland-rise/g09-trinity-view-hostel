@@ -21,6 +21,7 @@ public class Payment extends Record implements Payable {
     private double amountDue;
     private double amountPaid;
     private String method;
+    private String transactionId = "";
 
     public Payment(String id, String receiptNo, Tenant tenant, Room room, String paymentDate,
                    String dueDate, double amountDue, double amountPaid, String method) {
@@ -91,6 +92,30 @@ public class Payment extends Record implements Payable {
         throw new IllegalArgumentException("Method must be Cash, MTN, Airtel or Bank");
     }
 
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    // empty means no transaction ID, which is only allowed for cash and bank payments
+    public void setTransactionId(String transactionId) {
+        if (transactionId == null || transactionId.trim().isEmpty()) {
+            this.transactionId = "";
+            return;
+        }
+        if (!isValidTransactionId(transactionId.trim())) {
+            throw new IllegalArgumentException("Transaction ID must be 6 to 20 letters or digits");
+        }
+        this.transactionId = transactionId.trim().toUpperCase();
+    }
+
+    public static boolean isValidTransactionId(String id) {
+        return id != null && id.matches("[A-Za-z0-9]{6,20}");
+    }
+
+    public boolean isMobileMoney() {
+        return method.equals("MTN") || method.equals("Airtel");
+    }
+
     public static String[] getMethods() {
         return METHODS.clone();
     }
@@ -123,13 +148,20 @@ public class Payment extends Record implements Payable {
         }
         return id + " | " + name + " | " + tenant.getName() + " | Room " + room.getName()
                 + " | Due " + money(getPaymentAmount()) + " | Paid " + money(amountPaid)
-                + " | " + balanceText + " | " + method + " | " + paymentDate;
+                + " | " + balanceText + " | " + method + refText() + " | " + paymentDate;
+    }
+
+    private String refText() {
+        if (transactionId.isEmpty()) {
+            return "";
+        }
+        return " (Ref " + transactionId + ")";
     }
 
     // the room number is saved, not the room id, because rooms are found by number
     public String toFileLine() {
         return "RENT|" + id + "|" + name + "|" + tenant.getId() + "|" + room.getName() + "|"
-                + paymentDate + "|" + dueDate + "|" + amountDue + "|" + amountPaid + "|" + method;
+                + paymentDate + "|" + dueDate + "|" + amountDue + "|" + amountPaid + "|" + method + "|" + transactionId;
     }
 
     public static String money(double value) {

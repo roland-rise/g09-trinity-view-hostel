@@ -76,6 +76,10 @@ public class PaymentService {
                 throw new InvalidPaymentException("That receipt number is already used.");
             }
         }
+        // change request: mobile money payments must carry the transaction ID
+        if (p.isMobileMoney() && p.getTransactionId().isEmpty()) {
+            throw new InvalidPaymentException("A mobile money payment needs its transaction ID.");
+        }
         // client rule: the first instalment is at least half of the amount
         double half = p.getPaymentAmount() / 2;
         if (p.getAmountPaid() < half) {
@@ -180,7 +184,8 @@ public class PaymentService {
     // returns null for any line that cannot be turned into a payment
     private Payment parseLine(String line, TenantService tenants, RoomService rooms) {
         String[] part = line.split("\\|");
-        if (part.length != 10) {
+        // old lines have 10 parts, new lines have the transaction ID as an 11th part
+        if (part.length != 10 && part.length != 11) {
             return null;
         }
         Tenant tenant = tenants.findTenantById(part[3]);
@@ -190,18 +195,22 @@ public class PaymentService {
         }
         try {
             double paid = Double.parseDouble(part[8]);
+            Payment p = null;
             if (part[0].equals("RENT")) {
-                return new Payment(part[1], part[2], tenant, room, part[5], part[6],
+                p = new Payment(part[1], part[2], tenant, room, part[5], part[6],
                         Double.parseDouble(part[7]), paid, part[9]);
             }
             if (part[0].equals("LATE")) {
-                return new LateFeePayment(part[1], part[2], tenant, room, part[5], part[6],
+                p = new LateFeePayment(part[1], part[2], tenant, room, part[5], part[6],
                         Integer.parseInt(part[7]), paid, part[9]);
             }
+            if (p != null && part.length == 11) {
+                p.setTransactionId(part[10]);
+            }
+            return p;
         } catch (IllegalArgumentException e) {
             // a bad number or a rule broken in the file, so the line is skipped
             return null;
         }
-        return null;
     }
 }

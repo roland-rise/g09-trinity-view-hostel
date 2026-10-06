@@ -91,9 +91,11 @@ public class PaymentMenu {
         String due = input.readDate("Due date for the rest (yyyy-mm-dd): ");
         double paid = input.readDouble("Amount paid now: ", 0, MAX_AMOUNT);
         String method = askMethod();
+        String transactionId = askTransactionId(method);
         try {
             Payment p = new Payment(service.nextId(), service.nextReceipt(), tenant, room,
                     date, due, amountDue, paid, method);
+            p.setTransactionId(transactionId);
             service.addPayment(p);
             System.out.println("Saved. Receipt " + p.getName() + ", ID " + p.getId());
         } catch (InvalidPaymentException e) {
@@ -117,9 +119,11 @@ public class PaymentMenu {
         String due = input.readDate("Due date for the rest (yyyy-mm-dd): ");
         double paid = input.readDouble("Amount paid now: ", 0, MAX_AMOUNT);
         String method = askMethod();
+        String transactionId = askTransactionId(method);
         try {
             LateFeePayment p = new LateFeePayment(service.nextId(), service.nextReceipt(), tenant, room,
                     date, due, weeks, paid, method);
+            p.setTransactionId(transactionId);
             service.addPayment(p);
             System.out.println("Saved. Receipt " + p.getName() + ", ID " + p.getId());
         } catch (InvalidPaymentException e) {
@@ -233,6 +237,20 @@ public class PaymentMenu {
             System.out.println("No room with that number.");
         }
         return room;
+    }
+
+    // only MTN and Airtel payments have a mobile money transaction ID
+    private String askTransactionId(String method) {
+        if (!method.equals("MTN") && !method.equals("Airtel")) {
+            return "";
+        }
+        while (true) {
+            String id = input.readText("Mobile money transaction ID (6 to 20 letters or digits): ");
+            if (Payment.isValidTransactionId(id)) {
+                return id;
+            }
+            System.out.println("The ID must be 6 to 20 letters or digits.");
+        }
     }
 
     private String askMethod() {

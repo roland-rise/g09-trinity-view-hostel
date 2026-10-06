@@ -40,6 +40,6 @@ public class LateFeePayment extends Payment {
     public String toFileLine() {
         return "LATE|" + getId() + "|" + getName() + "|" + getTenant().getId() + "|"
                 + getRoom().getName() + "|" + getPaymentDate() + "|" + getDueDate() + "|"
-                + weeksLate + "|" + getAmountPaid() + "|" + getMethod();
+                + weeksLate + "|" + getAmountPaid() + "|" + getMethod() + "|" + getTransactionId();
     }
 }
