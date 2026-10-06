@@ -215,11 +215,11 @@ public class PaymentMenu {
 
     private Tenant askTenant() {
         System.out.println("Tenants:");
-        for (Tenant t : tenants.getAll()) {
+        for (Tenant t : tenants.getAllTenants()) {
             System.out.println("  " + t.getId() + "  " + t.getName());
         }
         String id = input.readText("Tenant ID: ");
-        Tenant tenant = tenants.findById(id);
+        Tenant tenant = tenants.findTenantById(id);
         if (tenant == null) {
             System.out.println("No tenant with that ID.");
         }
@@ -228,7 +228,7 @@ public class PaymentMenu {
 
     private Room askRoom() {
         String number = input.readText("Room number (for example B205): ").toUpperCase();
-        Room room = rooms.findByNumber(number);
+        Room room = rooms.findRoomByNumber(number);
         if (room == null) {
             System.out.println("No room with that number.");
         }

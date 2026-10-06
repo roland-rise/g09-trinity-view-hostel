@@ -1,10 +1,14 @@
-# Trinity View Hostel system, group G09
-Java command-line hostel record system for 1301 ST Object Oriented Programming, Victoria University Kampala.
+# Trinity View Hostel Management System - Group G09
 
-Stage 1: shared core (Record, Payable, InputHelper), main menu and the Rent payments module.
-Tenants and Rooms are temporary stand-ins until the real modules are merged.
+Stage 2: Real Tenants module (Mugira Grace) and Rooms module (Nsubuga Abdul) have been merged with the shared core.  
+Main menu options 1, 2 and 3 now work.
 
-Compile (JDK 17 or newer): javac -d out $(find src -name "*.java")
-Run: java -cp out ug.ac.vu.g09.app.MainMenu
+## Requirements
+- JDK 17 or newer
 
-All test data uses invented names. Commit history was rebuilt from the module zips as they were received.
+## How to Compile and Run
+
+### Windows
+```cmd
+javac -d out src\ug\ac\vu\g09\core\*.java src\ug\ac\vu\g09\app\*.java src\ug\ac\vu\g09\payments\*.java src\ug\ac\vu\g09\rooms\*.java src\ug\ac\vu\g09\tenants\*.java
+java -cp out ug.ac.vu.g09.app.MainMenu

@@ -61,6 +61,19 @@ public class InputHelper {
         }
     }
 
+    public boolean readYesNo(String prompt) {
+        while (true) {
+            String answer = readLine(prompt + " (y/n): ").toLowerCase();
+            if (answer.equals("y") || answer.equals("yes")) {
+                return true;
+            }
+            if (answer.equals("n") || answer.equals("no")) {
+                return false;
+            }
+            System.out.println("Please answer y or n.");
+        }
+    }
+
     public String readDate(String prompt) {
         while (true) {
             String line = readLine(prompt);

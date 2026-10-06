@@ -183,8 +183,8 @@ public class PaymentService {
         if (part.length != 10) {
             return null;
         }
-        Tenant tenant = tenants.findById(part[3]);
-        Room room = rooms.findByNumber(part[4]);
+        Tenant tenant = tenants.findTenantById(part[3]);
+        Room room = rooms.findRoomByNumber(part[4]);
         if (tenant == null || room == null) {
             return null;
         }

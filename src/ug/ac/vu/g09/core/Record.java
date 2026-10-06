@@ -32,4 +32,6 @@ public abstract class Record {
     }
 
     public abstract String describe();
+
+    public abstract String toFileLine();
 }
