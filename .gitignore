@@ -1,0 +1,11 @@
+# compiled files
+out/
+*.class
+sources.txt
+# data files made when the program runs
+data/
+tenants.txt
+clearances.txt
+rooms.txt
+blocks.txt
+bookings.txt
