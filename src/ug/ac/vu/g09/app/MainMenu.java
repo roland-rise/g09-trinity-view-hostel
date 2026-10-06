@@ -3,8 +3,11 @@ package ug.ac.vu.g09.app;
 import ug.ac.vu.g09.core.InputHelper;
 import ug.ac.vu.g09.payments.PaymentMenu;
 import ug.ac.vu.g09.payments.PaymentService;
+import java.io.File;
 import ug.ac.vu.g09.rooms.RoomMenu;
 import ug.ac.vu.g09.rooms.RoomService;
+import ug.ac.vu.g09.staff.StaffMenu;
+import ug.ac.vu.g09.staff.StaffService;
 import ug.ac.vu.g09.tenants.TenantMenu;
 import ug.ac.vu.g09.tenants.TenantService;
 
@@ -17,8 +20,10 @@ public class MainMenu {
     private TenantMenu tenantMenu;
     private RoomMenu roomMenu;
     private PaymentMenu paymentMenu;
+    private StaffMenu staffMenu;
 
     public MainMenu() {
+        new File("data").mkdirs();
         input = new InputHelper();
         TenantService tenants = new TenantService();
         RoomService rooms = new RoomService();
@@ -26,6 +31,7 @@ public class MainMenu {
         payments.loadFromFile(tenants, rooms);
         tenantMenu = new TenantMenu(tenants, rooms, input);
         roomMenu = new RoomMenu(rooms, tenants, input);
+        staffMenu = new StaffMenu(new StaffService("data/staff.txt", "data/attendance.txt"), input);
         paymentMenu = new PaymentMenu(payments, tenants, rooms, input);
     }
 
@@ -52,6 +58,9 @@ public class MainMenu {
                     break;
                 case 3:
                     paymentMenu.run();
+                    break;
+                case 7:
+                    staffMenu.run();
                     break;
                 case 0:
                     running = false;

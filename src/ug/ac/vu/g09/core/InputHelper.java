@@ -74,6 +74,11 @@ public class InputHelper {
         }
     }
 
+    // blank is allowed here, for prompts like "new name (blank = keep)"
+    public String readOptional(String prompt) {
+        return readLine(prompt);
+    }
+
     public String readDate(String prompt) {
         while (true) {
             String line = readLine(prompt);
