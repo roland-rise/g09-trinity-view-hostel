@@ -1,5 +1,6 @@
 package ug.ac.vu.g09.visitors;
 
+import ug.ac.vu.g09.core.InputHelper;
 import ug.ac.vu.g09.core.Record;
 import ug.ac.vu.g09.tenants.Tenant;
 
@@ -46,7 +47,7 @@ public class VisitRecord extends Record {
     }
 
     public void setVisitDate(String d) {
-        if (d == null || !d.matches("\\d{4}-\\d{2}-\\d{2}"))
+        if (!InputHelper.isValidDate(d))
             throw new IllegalArgumentException("Date must look like 2026-10-05");
         this.visitDate = d;
     }
@@ -69,6 +70,11 @@ public class VisitRecord extends Record {
     public void signOut(String time) {
         if (!isInside()) throw new IllegalStateException("Visitor already signed out");
         setTimeOut(time);
+        // an overnight visit may end on the next day, so only other visits are checked
+        if (!overnight && timeOut.compareTo(timeIn) < 0) {
+            timeOut = "";
+            throw new IllegalArgumentException("Time out cannot be before time in");
+        }
     }
 
     public boolean isInside() {

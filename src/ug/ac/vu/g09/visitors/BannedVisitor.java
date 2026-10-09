@@ -38,6 +38,11 @@ public class BannedVisitor extends Record {
     public void setBannedBy(String bannedBy) {
         if (bannedBy == null || bannedBy.trim().isEmpty())
             throw new IllegalArgumentException("Who banned this visitor is required");
+        // client rule: only the manager, the secretary or a security guard can ban
+        String who = bannedBy.trim().toLowerCase();
+        if (!who.contains("manager") && !who.contains("secretary") && !who.contains("security") && !who.contains("guard")) {
+            throw new IllegalArgumentException("Only the manager, the secretary or a security guard can ban a visitor");
+        }
         this.bannedBy = bannedBy.trim();
     }
 

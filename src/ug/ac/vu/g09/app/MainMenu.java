@@ -37,13 +37,14 @@ public class MainMenu {
         TenantService tenants = new TenantService();
         RoomService rooms = new RoomService();
         PaymentService payments = new PaymentService();
+        tenants.linkRooms(rooms);
         payments.loadFromFile(tenants, rooms);
         tenantMenu = new TenantMenu(tenants, rooms, input);
         roomMenu = new RoomMenu(rooms, tenants, input);
         staffMenu = new StaffMenu(new StaffService("data/staff.txt", "data/attendance.txt"), input);
         BookingService bookings = new BookingService();
-        bookings.loadFromFile();
-        bookingMenu = new BookingMenu(bookings, input);
+        bookings.loadFromFile(rooms, tenants);
+        bookingMenu = new BookingMenu(bookings, tenants, rooms, input);
         // the maintenance service does not load itself, so it is loaded here
         MaintenanceService maintenance = new MaintenanceService(tenants, rooms);
         maintenance.loadFromFile();

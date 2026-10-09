@@ -108,6 +108,8 @@ public class RoomMenu {
         }
         try {
             svc.assignTenant(roomId, t);
+            // the tenant keeps the room too, so it is saved with the tenant
+            tenants.allocateRoomToTenant(t.getId(), svc.findRoom(roomId));
             System.out.println("Tenant assigned.");
         } catch (RoomFullException e) {
             System.out.println("REJECTED: " + e.getMessage());

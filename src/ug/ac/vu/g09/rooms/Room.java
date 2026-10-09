@@ -103,15 +103,34 @@ public class Room extends Record {
      * @throws IllegalArgumentException if gender mismatch
      */
     public void addOccupant(Tenant tenant) throws RoomFullException {
+        if (tenant == null) {
+            throw new IllegalArgumentException("A tenant is needed.");
+        }
+        if (occupants.contains(tenant)) {
+            throw new IllegalArgumentException("Tenant " + tenant.getName() + " is already in this room.");
+        }
+        // client rule: a blocked tenant cannot be given a bed
+        if (tenant.isBlocked()) {
+            throw new IllegalArgumentException("Tenant " + tenant.getName() + " is blocked and cannot be given a bed.");
+        }
+        // client rule J1: men and women are kept in separate blocks
+        if (block != null && !block.allows(tenant.getGender())) {
+            throw new IllegalArgumentException("Tenant " + tenant.getName() + " (" + tenant.getGender()
+                    + ") cannot be placed in block " + block.getName() + ", which is for " + block.getGenderRule() + " only.");
+        }
         if (occupants.size() >= capacity) {
             throw new RoomFullException("Room " + getName() + " is full (" + capacity + " beds).");
         }
-        if (tenant != null && block != null && !block.allows(tenant.getName())) {
-            // stub Tenant has no gender; real Tenant will supply it after merge
-            // for now we skip strict gender check on stub
-        }
         occupants.add(tenant);
         refreshStatus();
+    }
+
+    // used when data is loaded, so the rules are not checked a second time
+    public void restoreOccupant(Tenant tenant) {
+        if (tenant != null && !occupants.contains(tenant)) {
+            occupants.add(tenant);
+            refreshStatus();
+        }
     }
 
     public void removeOccupant(Tenant tenant) {

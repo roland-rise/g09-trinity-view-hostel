@@ -226,7 +226,7 @@ public class StaffService {
         Files.write(attendanceFile, al);
     }
 
-    /** Loads both files. Missing files = fresh start. Corrupt lines throw IOException. */
+    /** Loads both files. Missing files = fresh start. Damaged lines are skipped and the good lines are kept. */
     public void load() throws IOException {
         staffList.clear();
         attendanceList.clear();
@@ -240,7 +240,7 @@ public class StaffService {
                     staffList.add(s);
                     nextStaffNo = Math.max(nextStaffNo, numberOf(s.getId()) + 1);
                 } catch (RuntimeException e) {
-                    throw new IOException("Corrupt staff file line: " + line, e);
+                    System.out.println("Skipped damaged staff line: " + line);
                 }
             }
         }
@@ -258,7 +258,7 @@ public class StaffService {
                     attendanceList.add(e);
                     nextAttNo = Math.max(nextAttNo, numberOf(p[0]) + 1);
                 } catch (RuntimeException e) {
-                    throw new IOException("Corrupt attendance file line: " + line, e);
+                    System.out.println("Skipped damaged attendance line: " + line);
                 }
             }
         }

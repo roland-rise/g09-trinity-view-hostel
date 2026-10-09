@@ -116,16 +116,16 @@ public class StaffModuleTests {
             expect(b.getAllRecords().size() == 3, "count"); expect(b.findStaffById("G09-S002").getShift() == Staff.Shift.DAY, "shift");
             expect(b.addStaff("Grace Atim", "Secretary").getId().equals("G09-S003"), "next id continues"); });
         check("TC28", "missing data files -> clean start, no exception", () -> { StaffService s = fresh(); s.load(); expect(s.getAllRecords().isEmpty(), "empty"); });
-        check("TC29", "corrupt staff file -> IOException", () -> {
-            Path dir = Files.createTempDirectory("g09bad"); Files.writeString(dir.resolve("s.txt"), "garbage line\n");
+        check("TC29", "corrupt first line is skipped and the good line is kept", () -> {
+            Path dir = Files.createTempDirectory("g09bad"); Files.writeString(dir.resolve("s.txt"), "garbage line\nG09-S001|Alice Mwesigwa|MANAGER|UNASSIGNED\n");
             StaffService s = new StaffService(dir.resolve("s.txt").toString(), dir.resolve("a.txt").toString());
-            throwsEx(IOException.class, s::load); });
-        check("TC30", "attendance line pointing at unknown staff ID -> IOException", () -> {
+            s.load(); expect(s.getAllStaff().size() == 1, "size " + s.getAllStaff().size()); });
+        check("TC30", "attendance line pointing at unknown staff ID is skipped", () -> {
             Path dir = Files.createTempDirectory("g09bad2");
             Files.writeString(dir.resolve("s.txt"), "G09-S001|Alice Mwesigwa|MANAGER|UNASSIGNED\n");
             Files.writeString(dir.resolve("a.txt"), "G09-A001|G09-S999|2026-10-04|false||Sick\n");
             StaffService s = new StaffService(dir.resolve("s.txt").toString(), dir.resolve("a.txt").toString());
-            throwsEx(IOException.class, s::load); });
+            s.load(); expect(s.getAllRecords().size() == 1, "size " + s.getAllRecords().size()); });
         check("TC31", "removing staff also removes their attendance", () -> {
             StaffService s = roster(); s.recordAbsence("G09-S005", D, "Sick"); s.removeStaff("G09-S005");
             expect(s.getAllRecords().size() == 8, "size " + s.getAllRecords().size()); });

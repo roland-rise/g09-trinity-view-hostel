@@ -66,6 +66,9 @@ public class VisitorService {
     }
 
     public void ban(BannedVisitor b) {
+        if (isBanned(b.getIdNumber())) {
+            throw new IllegalArgumentException("That ID number is already banned");
+        }
         banned.add(b);
         saveToFile();
     }
@@ -107,8 +110,21 @@ public class VisitorService {
 
     public ArrayList<BannedVisitor> getBanned() { return banned; }
 
-    public String nextVisitId() { return "G09-V" + String.format("%03d", visits.size() + 1); }
-    public String nextBanId() { return "G09-X" + String.format("%03d", banned.size() + 1); }
+    public String nextVisitId() { return "G09-V" + String.format("%03d", highest(visits) + 1); }
+    public String nextBanId() { return "G09-X" + String.format("%03d", highest(banned) + 1); }
+
+    // the next ID is one more than the biggest in use, so a removed record never causes a repeat
+    private int highest(ArrayList<? extends ug.ac.vu.g09.core.Record> list) {
+        int top = 0;
+        for (ug.ac.vu.g09.core.Record r : list) {
+            try {
+                top = Math.max(top, Integer.parseInt(r.getId().substring(5)));
+            } catch (RuntimeException e) {
+                // an ID that does not end in a number is ignored
+            }
+        }
+        return top;
+    }
 
     public void loadFromFile() {
         visits.clear();

@@ -2,6 +2,7 @@ package ug.ac.vu.g09.tenants;
 
 import ug.ac.vu.g09.core.InputHelper;
 import ug.ac.vu.g09.rooms.Room;
+import ug.ac.vu.g09.rooms.RoomFullException;
 import ug.ac.vu.g09.rooms.RoomService;
 
 import java.util.List;
@@ -122,10 +123,21 @@ public class TenantMenu {
             System.out.println("No room with that number.");
             return;
         }
+        Tenant tenant = service.findTenantById(tenantId);
+        if (tenant == null) {
+            System.out.println("Tenant not found.");
+            return;
+        }
         try {
+            // the room checks gender, blocked tenants and space first
+            rooms.assignTenant(room.getId(), tenant);
             service.allocateRoomToTenant(tenantId, room);
             System.out.println("Room allocated.");
         } catch (TenantRuleException e) {
+            System.out.println("Allocation refused: " + e.getMessage());
+        } catch (RoomFullException e) {
+            System.out.println("Allocation refused: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
             System.out.println("Allocation refused: " + e.getMessage());
         }
     }

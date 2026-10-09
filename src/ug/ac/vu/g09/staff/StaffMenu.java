@@ -63,15 +63,15 @@ public class StaffMenu {
     private void add() {
         Staff s = service.addStaff(input.readText("Full name: "),
                                    input.readText("Role (Manager/Custodian/Security/Cleaner/Secretary): "));
-        System.out.print("Added: "); s.describe();
+        System.out.println("Added: " + s.describe());
     }
 
     private void find() {
         String q = input.readText("Staff ID or part of name: ");
-        try { service.findStaffById(q).describe(); return; }
+        try { System.out.println(service.findStaffById(q).describe()); return; }
         catch (IllegalArgumentException ignored) { /* not an ID, try name */ }
         if (service.findStaffByName(q).isEmpty()) System.out.println("No match.");
-        for (Staff s : service.findStaffByName(q)) s.describe();
+        for (Staff s : service.findStaffByName(q)) System.out.println(s.describe());
     }
 
     private void update() {

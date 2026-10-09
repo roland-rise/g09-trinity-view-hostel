@@ -2,9 +2,11 @@ package ug.ac.vu.g09.tenants;
 
 import ug.ac.vu.g09.core.Record;
 import ug.ac.vu.g09.rooms.Room;
+import ug.ac.vu.g09.rooms.RoomService;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Comparator;
 import java.util.List;
 
@@ -19,6 +21,7 @@ public class TenantService {
     private final ArrayList<TenantClearance> clearances = new ArrayList<>();
     private final String tenantFile = "tenants.txt";
     private final String clearanceFile = "clearances.txt";
+    private final HashMap<String, String> roomLinks = new HashMap<>();
     private int nextTenantNum = 1;
     private int nextClearanceNum = 1;
 
@@ -128,6 +131,29 @@ public class TenantService {
         updateTenant(t);
     }
 
+    // after both files are loaded, each tenant goes back to the room saved for them
+    public void linkRooms(RoomService rooms) {
+        for (Tenant t : tenants) {
+            String roomId = roomLinks.get(t.getId());
+            if (roomId == null) {
+                continue;
+            }
+            Room r = rooms.findRoom(roomId);
+            if (r == null) {
+                continue;
+            }
+            boolean wasBlocked = t.isBlocked();
+            t.setBlocked(false);
+            try {
+                t.allocateRoom(r);
+            } catch (TenantRuleException e) {
+                // cannot happen, the tenant was unblocked a line ago
+            }
+            t.setBlocked(wasBlocked);
+            r.restoreOccupant(t);
+        }
+    }
+
     // ------------------------------------------------------------------
     // Reports (Comparator)
     // ------------------------------------------------------------------
@@ -173,6 +199,7 @@ public class TenantService {
     public void loadFromFile() {
         tenants.clear();
         clearances.clear();
+        roomLinks.clear();
         // Tenants
         try (BufferedReader br = new BufferedReader(new FileReader(tenantFile))) {
             String line;
@@ -182,6 +209,10 @@ public class TenantService {
                 try {
                     Tenant t = Tenant.fromFileLine(line);
                     tenants.add(t);
+                    String[] parts = line.split("\\|", -1);
+                    if (parts.length >= 7 && !parts[6].isEmpty() && !parts[6].equals("NONE")) {
+                        roomLinks.put(t.getId(), parts[6]);
+                    }
                     // keep next number ahead of existing ids
                     try {
                         int num = Integer.parseInt(t.getId().substring(5));

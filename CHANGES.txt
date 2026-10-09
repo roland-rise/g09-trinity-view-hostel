@@ -1,4 +1,4 @@
-G09 merge build 6. Every change made to a teammate's file is listed here.
+G09 merge 5. Every change made to a teammate's file is listed here.
 
 DROPPED (already in the shared core, or replaced by the real class)
   Grace:     core/Record.java, core/InputHelper.java, rooms/Room.java (her stub), TenantModuleDemo.java, README.txt
@@ -54,10 +54,12 @@ CHANGE REQUEST BUILT (Mande, Payments): record the mobile money transaction ID
   Other modules: no change. Compiles and all earlier behaviour is unchanged. Tested: bad ID refused then good ID saved,
   cash needs no ID, ID shown in the list and saved in the file, an old line without an ID still loads.
 
-@AUTHOR TAGS ADDED (Mande): the brief wants an @author tag with the owner's name on every class.
+@AUTHOR TAGS ADDED (Mande): an @author tag with the owner's name on every class.
   Added to the 5 Bookings classes (Nayiga Patricia) and the 5 Staff classes (Douth Nhial). No other change in those files.
 
-MAINMENU (Mande)
-  options 1 to 7 start the real menus. Maintenance and Bookings are loaded at start-up:
-  Herbert's service does not load itself, so MainMenu calls loadFromFile() for it.
+MERGE FIX FOUND BY RUNNING THE TESTS (Mande): in StaffMenu three places called describe() and threw the text away after describe()
+  started returning a String (add staff, find by ID, find by name). They now print it. Found while capturing test screenshots.
+
+ROOM.JAVA FIXED (Mande, for Abdul): addOccupant() now refuses a blocked tenant and a tenant of the wrong gender for the block
+  (faults D1 and D2). Only Room.java changed. D3 (rooms forgetting occupants after a restart) is still open.
 
